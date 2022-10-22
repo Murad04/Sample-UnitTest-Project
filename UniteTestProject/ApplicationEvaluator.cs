@@ -1,5 +1,6 @@
 ﻿using UniteTestProject.Enums;
 using UniteTestProject.Models;
+using UniteTestProject.Services;
 
 namespace UniteTestProject
 {
@@ -8,6 +9,12 @@ namespace UniteTestProject
         private const int MinAge = 18;
         private const int AcceptedYears = 18;
         private List<string> techStackList = new() { "ASP.NET Core", "Unit Test", "Microservices", "Dapper" };
+        private IdentityValidator identityValidator;
+
+        public ApplicationEvaluator(IdentityValidator identityValidator)
+        {
+            this.identityValidator = identityValidator;
+        }
 
         public ApplicantionResult Result(JobApplicant applicant)
         {
@@ -15,6 +22,10 @@ namespace UniteTestProject
             {
                 return ApplicantionResult.AutoRejected;
             }
+
+            var validIdentity = identityValidator.IsValid(applicant.Applicant.IdentityNumber);
+            if (!validIdentity)
+                return ApplicantionResult.TransferredToHR;
 
             var sr = GetTechStackSimilarityRate(applicant.TechStackList);
             if (sr < 25)
