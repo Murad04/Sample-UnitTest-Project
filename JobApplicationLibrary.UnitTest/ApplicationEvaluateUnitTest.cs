@@ -1,7 +1,9 @@
+using Moq;
 using NUnit.Framework;
 using UniteTestProject;
 using UniteTestProject.Enums;
 using UniteTestProject.Models;
+using UniteTestProject.Services;
 
 namespace JobApplicationLibrary.UnitTest
 {
@@ -11,7 +13,7 @@ namespace JobApplicationLibrary.UnitTest
         public void Application_WithUnderAge_TransferredToAutoRejected()
         {
             // Arrange
-            var evaluator = new ApplicationEvaluator();
+            var evaluator = new ApplicationEvaluator(null);
             var form = new JobApplicant()
             {
                 Applicant = new Applicant()
@@ -31,7 +33,11 @@ namespace JobApplicationLibrary.UnitTest
         public void Application_WithNoTechStack_TransferredToAutoRejected()
         {
             // Arrange
-            var evaluator = new ApplicationEvaluator();
+
+            var mockValidator = new Mock<IIdentityValidator>();
+            mockValidator.Setup(i => i.IsValid("")).Returns(true);
+
+            var evaluator = new ApplicationEvaluator(mockValidator.Object);
             var form = new JobApplicant()
             {
                 Applicant = new Applicant(),
@@ -49,7 +55,7 @@ namespace JobApplicationLibrary.UnitTest
         public void Application_With75PTechStack_TransferredToAutoRejected()
         {
             // Arrange
-            var evaluator = new ApplicationEvaluator();
+            var evaluator = new ApplicationEvaluator(null);
             var form = new JobApplicant()
             {
                 Applicant = new Applicant(),

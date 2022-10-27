@@ -9,11 +9,11 @@ namespace UniteTestProject
         private const int MinAge = 18;
         private const int AcceptedYears = 18;
         private List<string> techStackList = new() { "ASP.NET Core", "Unit Test", "Microservices", "Dapper" };
-        private IdentityValidator identityValidator;
+        private IIdentityValidator iidentityValidator;
 
-        public ApplicationEvaluator(IdentityValidator identityValidator)
+        public ApplicationEvaluator(IIdentityValidator iidentityValidator)
         {
-            this.identityValidator = identityValidator;
+            this.iidentityValidator = iidentityValidator;
         }
 
         public ApplicantionResult Result(JobApplicant applicant)
@@ -23,7 +23,7 @@ namespace UniteTestProject
                 return ApplicantionResult.AutoRejected;
             }
 
-            var validIdentity = identityValidator.IsValid(applicant.Applicant.IdentityNumber);
+            var validIdentity = iidentityValidator.IsValid(applicant.Applicant.IdentityNumber);
             if (!validIdentity)
                 return ApplicantionResult.TransferredToHR;
 
