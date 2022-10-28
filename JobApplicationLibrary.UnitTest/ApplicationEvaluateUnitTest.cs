@@ -33,14 +33,13 @@ namespace JobApplicationLibrary.UnitTest
         public void Application_WithNoTechStack_TransferredToAutoRejected()
         {
             // Arrange
-
-            var mockValidator = new Mock<IIdentityValidator>();
-            mockValidator.Setup(i => i.IsValid("")).Returns(true);
+            var mockValidator = new Mock<IIdentityValidator>(MockBehavior.Strict);
+            mockValidator.Setup(i => i.IsValid(It.IsAny<string>())).Returns(true);
 
             var evaluator = new ApplicationEvaluator(mockValidator.Object);
             var form = new JobApplicant()
             {
-                Applicant = new Applicant(),
+                Applicant = new Applicant() { IdentityNumber = "" },
                 TechStackList = new List<string>() { "" }
             };
 
